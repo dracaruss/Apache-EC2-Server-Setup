@@ -5,7 +5,12 @@ First through the AWS console.
 Second by terraform.
 Third by using Jenkins to automate the terraform and entire workflow.
 
+First create an EC2 instance in AWS using the console, using a pre made VPC and subnets that allow internet access on HTTP (80) and HTTPS (443).
+I leave these ports open to the public since I am using this instance as a web server.
+
 ![1  ec2_creation](https://github.com/user-attachments/assets/a7c76a55-b2a1-416e-9de2-45b66072d06b)
+
+After being deployed, double check the settings and take note of the public IP for use later on.
 
 ![2  ec2 settings](https://github.com/user-attachments/assets/bec4979e-3e80-4eba-9b0b-7adeeabf0fca)
 
