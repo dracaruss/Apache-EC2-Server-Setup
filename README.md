@@ -31,15 +31,15 @@ https://github.com/dracaruss/Apache-EC2-Server-Setup/tree/e2a76105804c257c37849b
 
 First create a pick-a-name.sh file on the instance:
   
-  $ nano pick-a-name.sh  
+<span style="color:red">$ nano pick-a-name.sh</span>
 
 Give it executable ability with:
 
-  $ chmod +x pick-a-name.sh
+<span style="color:red">$ chmod +x pick-a-name.sh</span>
   
 Then paste in the Apache script from my repo, and save and run the script to launch the Apache web server on the instance:
 
-  $ ./pick-a-name.sh
+<span style="color:red">$ ./pick-a-name.sh</span>
 
 ![6  Install apache server](https://github.com/user-attachments/assets/8edfb6d8-082c-4293-a582-90212863b27a)
 
