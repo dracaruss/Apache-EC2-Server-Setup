@@ -48,4 +48,5 @@ Once deployed, use the public IP from the EC2 configuration page to now access t
 ![7  web server launched](https://github.com/user-attachments/assets/3606f646-7f27-4aaa-95f9-05f8f878db10)
 
 Working as expected!
+
 That's the process I used to configure the web server by using the AWS console, so now onto doing it the second way using terraform IAC.
