@@ -27,7 +27,7 @@ Now to deploy the Apache web server on the EC2, I navigate to EC2 Connect functi
 ![5  ec2 connect](https://github.com/user-attachments/assets/1ef17562-b012-424b-8ef0-1c988be855bd)
 
 To install the web server, run the script (in my repo) to download, install, and configure the Apache server.
-https://github.com/dracaruss/Apache-EC2-Server-Setup/tree/e2a76105804c257c37849ba63330a7160b3b2c6f/Apache%20app%20script
+https://github.com/dracaruss/Apache-EC2-Server-Setup/tree/44b482046bba5cf3ee65366495b658fa2c8922dd
 
 First create a pick-a-name.sh file on the instance:
   
