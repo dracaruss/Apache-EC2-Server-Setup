@@ -89,6 +89,6 @@ $ aws configure
 
 And also to verify the CLi connection is up and running and good to go.
 
-	$ aws sts get-caller-identity 
+	aws sts get-caller-identity 
 
 
