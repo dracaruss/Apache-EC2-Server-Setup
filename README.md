@@ -59,3 +59,36 @@ That's the process I used to configure the web server by using the AWS console, 
 TERRAFORM SETUP:
 
 ![proxy-image (1)](https://github.com/user-attachments/assets/8641d8ea-f518-47d2-a793-f1485d18f3e3)
+
+First let's install terraform, via my linux VM on my Windows 10. I am most comfortable with Kali but in this case I am using a vanilla Ubuntu.
+To install terraform I run these commands to download it, unzip it and then move it into the PATH so I can call it globally.
+
+$ sudo apt update && sudo apt install -y wget unzip                                
+$ wget https://releases.hashicorp.com/terraform/1.5.5/terraform_1.5.5_linux_amd64.zip
+$ unzip terraform_1.5.5_linux_amd64.zip
+$ sudo mv terraform /usr/local/bin/
+$ terraform -v
+
+![1 get terraform installed](https://github.com/user-attachments/assets/d2a69a03-111c-441d-92d1-7f012a2f5aa8)
+
+I got terraform 1.55 purposely, because it's the last version that was then forked to OpenTofu, before IBM took over Hashicorp. 
+I did that to keep it as widely compatible as possible.
+
+Then I had to install the AWS CLi on my VM, to interface with AWS.
+
+$ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+![2 install the aws cli](https://github.com/user-attachments/assets/8d6b8c7c-8ba1-4d73-a0bf-baaa1086d85b)
+
+Next was to configure the AWS CLi with the credentials and details for the connection:
+
+$ aws configure 
+
+
+And also to verify the CLi connection is up and running and good to go.
+
+	$ aws sts get-caller-identity 
+
+
