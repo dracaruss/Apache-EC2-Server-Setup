@@ -7,6 +7,8 @@ First through the AWS console.
 Second by terraform.
 Third by using Jenkins to automate the terraform and entire workflow.
 
+##
+
 CONSOLE SETUP:
 
 ![management logo](https://github.com/user-attachments/assets/a98c57d2-686a-4e41-a2eb-cddb53a8ac3f)
@@ -56,6 +58,8 @@ Working as expected!
 
 That's the process I used to configure the web server by using the AWS console, so now onto doing it the second way using terraform IAC.
 
+##
+
 TERRAFORM SETUP:
 
 ![proxy-image (1)](https://github.com/user-attachments/assets/8641d8ea-f518-47d2-a793-f1485d18f3e3)
@@ -94,15 +98,13 @@ Now to install VSCode for linux.
 First download the package from the website:
 
 	https://code.visualstudio.com/download
-##
-##
+
 Then move it to my terraform folder:
 
 	cp /home/beowubuntu/Downloads/code_1.96.2-1734607745_amd64.deb .
 
 Then install it:
 
-##
 	sudo apt install ./code_1.96.2-1734607745_amd64.deb
 
 
