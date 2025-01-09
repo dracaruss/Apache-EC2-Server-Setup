@@ -45,7 +45,7 @@ Then paste in the Apache script from my repo, and save and run the script to lau
 
 Once deployed, use the public IP from the EC2 configuration page to now access the web server from the internet using port 80 or 443 from the browser.
 
-![7  web server launched](https://github.com/user-attachments/assets/3606f646-7f27-4aaa-95f9-05f8f878db10)
+![8  web server 2 launched](https://github.com/user-attachments/assets/e5b51c16-2baa-48fb-947b-c398a4ffa73b)
 
 Working as expected!
 
