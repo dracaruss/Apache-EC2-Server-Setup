@@ -191,12 +191,183 @@ Then imported the VPC via the CLI:
 Import successful, ok great moving on!
 
 The route table configuration needed to be applied to the route table next:
-##
+
 	resource "aws_route_table_association" "give_public_internet" {
 	  subnet_id      = aws_subnet.public_subnet_russ1.id
 	  route_table_id = aws_route_table.vpc_route_table.id
 	}
 
+![8 create route table associations](https://github.com/user-attachments/assets/d7dfabdf-05da-4a1e-bba2-85c7e64ebff1)
+
+Subnets now have internet access!:
+
+![9 subnets now have internet access](https://github.com/user-attachments/assets/7b34bb8f-a461-4dc9-87b0-6fcf9c64edd4)
+
+Before I launch my EC2 I need to setup a security group to associate with it.
+First I need my IP to associate with the SSH access.
+From the AWS CLI:
+
+	curl https://checkip.amazonaws.com
+
+(I also checked in the console while going through the steps to create an EC2 and grabbed the AMI)
+
+Ok now to setup my Security Group:
+
+	resource "aws_security_group" "secgroup1-russ" {
+	  name = "webserver_access"
+	  vpc_id      =  aws_vpc.EC2-webserver-vpc.id
+	
+	ingress {
+	    from_port   = 22
+	    to_port     = 22
+	    protocol    = "tcp"
+	    cidr_blocks = ["0.0.0.0/0"]
+	  }
+	  ingress {
+	    from_port   = 80
+	    to_port     = 80
+	    protocol    = "tcp"
+	    cidr_blocks = ["0.0.0.0/0"]
+	  }
+	    ingress {
+	    from_port   = 443
+	    to_port     = 443
+	    protocol    = "tcp"
+	    cidr_blocks = ["0.0.0.0/0"]
+	  }
+	  # Outbound rule allowing all outbound traffic
+	  egress {
+	    from_port   = 0
+	    to_port     = 0
+	    protocol    = "-1"          # -1 means all protocols
+	    cidr_blocks = ["0.0.0.0/0"] # Allow outbound traffic to anywhere
+	  }
+	}
+
+I also need to create a key pair for the EC2:
+
+	resource "tls_private_key" "privatekey-ec2-webserver" {
+	  algorithm = "RSA"
+	  rsa_bits  = 2048
+	}
+	
+	resource "aws_key_pair" "ec2-public-key" {
+	  key_name   = "ec2-public-key-webserver"
+	  public_key = tls_private_key.privatekey-ec2-webserver.public_key_openssh
+	}
+
+This gave me an error since it needed the tls provider which I didn’t originally add to my main.tf, Oops.
+
+![11 create the public and private keys](https://github.com/user-attachments/assets/7e240cd2-8f29-4366-be49-bd96cb36f420)
+
+First I used 
+
+	terraform init -upgrade 
+
+to get my backend configured with the needed tls provider.
+
+Then I explicitly added the tls provider to the main.tf, and specified the version in the terraform block.
+
+	terraform {
+	  required_providers {
+	    aws = {
+	      source  = "hashicorp/aws"
+	      version = "5.82.2"
+	    }
+	    tls = {
+	      source  = "hashicorp/tls"
+	      version = "4.0.6"
+	    }
+	  }
+	}
+	
+	provider "aws" {
+	  region = "us-east-1"
+	}
+	
+	provider "tls" {} # adding the missing provider
+	
+	To download the private.pem file I added:
+	
+	# Save the private key to a file
+	resource "local_file" "private_ec2_key" {
+	  content  = tls_private_key.privatekey-ec2-webserver.private_key_pem
+	  filename = "ec2_webserver.pem"
+	  provisioner "local-exec" {
+	    command = "chmod 600 ec2_webserver.pem"
+	  }
+	}
+
+This also failed because I didn’t add the ‘local’ provider (face palm), so I explicitly did that with the version for future stability:
+
+	terraform {
+	  required_providers {
+	    aws = {
+	      source  = "hashicorp/aws"
+	      version = "5.82.2"
+	    }
+	    tls = {
+	      source  = "hashicorp/tls"
+	      version = "4.0.6" 
+	    }
+	    local = {
+	      source  = "hashicorp/local"
+	      version = "2.5.2"
+	    }
+	  }
+	}
+	
+	provider "aws" {
+	  region = "us-east-1"
+	}
+	
+	provider "tls" {}
+	
+	provider "local" {}
+
+After running a new init and plan I am good to go!
+
+Now that the backing infrastructure is finally setup, it’s time to provision the EC2 that will host the Apache web server:
+##
+	resource "aws_instance" "ecX-terraform" {
+	  ami           = "ami-01816d07b1128cd2d"
+	  instance_type = "t2.micro"
+	  key_name      = "ec2-public-key-webserver"
+	  subnet_id     = aws_subnet.public_subnet_russ1.id
+	
+	  vpc_security_group_ids = [
+	    aws_security_group.secgroup1-russ.id
+	  ]
+	}
+
+Ok applied and everything is great! 
+Now finally and lastly it’s time to configure my Apache webserver!
+
+I added the user_data sectino to the EC2 instance block, to install the apache web server via yum on the AWS Linux EC2 
+(I made an initial mistake and used apt instead of yum 😀, I guess I am too used to Ubuntu and Kali!)
+##
+	resource "aws_instance" "ecX-terraform" {
+	  ami           = "ami-01816d07b1128cd2d"
+	  instance_type = "t2.micro"
+	  key_name      = "ec2-public-key-webserver"
+	  subnet_id     = aws_subnet.public_subnet_russ1.id
+	
+	  vpc_security_group_ids = [
+	    aws_security_group.secgroup1-russ.id
+	  ]
+	
+	  associate_public_ip_address = true # This ensures a public IP is assigned
+	
+	  user_data = <<-EOF
+	    #!/bin/bash
+	        sudo yum update -y
+	        sudo yum install httpd -y
+	        sudo systemctl start httpd
+	        sudo systemctl enable httpd
+	        echo "<html><body><h1>This is Russell's Apache website!</h1></body></html>" > /var/www/html/index.html
+	        sudo systemctl restart httpd
+	    EOF
+	}
 
 
 
