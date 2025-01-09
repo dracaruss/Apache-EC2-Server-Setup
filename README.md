@@ -46,6 +46,8 @@ Then paste in the Apache script from my repo, and save and run the script to lau
 
 Once deployed, use the public IP of the EC2 to access the web page using http (not https) on port 80 from the browser.
 
+![8  web server 2 launched](https://github.com/user-attachments/assets/e5b51c16-2baa-48fb-947b-c398a4ffa73b)
+
 Working as expected!
 
 That's the process I used to configure the web server by using the AWS console, so now onto doing it the second way using terraform IAC.
