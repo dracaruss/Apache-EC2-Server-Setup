@@ -90,7 +90,22 @@ And also to verify the CLi connection is up and running and good to go.
 
 	aws sts get-caller-identity 
 
-$ aws configure 
- test
+Now to install VSCode for linux.
+First download the package from the website:
+
+	https://code.visualstudio.com/download
+##
+##
+Then move it to my terraform folder:
+
+	cp /home/beowubuntu/Downloads/code_1.96.2-1734607745_amd64.deb .
+
+Then install it:
+
+##
+	sudo apt install ./code_1.96.2-1734607745_amd64.deb
+
+
+
 
 
