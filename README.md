@@ -1,6 +1,7 @@
 # Apache-EC2-Server-Setup
 
 Russell Alexander here!
+
 Follow me as I demonstrate how to set up an Apache web server on EC2 in AWS in 3 different ways. 
 First through the AWS console.
 Second by terraform.
@@ -44,7 +45,6 @@ Then paste in the Apache script from my repo, and save and run the script to lau
 ![6  Install apache server](https://github.com/user-attachments/assets/8edfb6d8-082c-4293-a582-90212863b27a)
 
 Once deployed, use the public IP from the EC2 configuration page to now access the web server from the internet using port 80 or 443 from the browser.
-
 
 ![8  web server 2 launched](https://github.com/user-attachments/assets/e5b51c16-2baa-48fb-947b-c398a4ffa73b)
 
