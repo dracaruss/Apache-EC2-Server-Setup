@@ -369,6 +369,10 @@ I added the user_data sectino to the EC2 instance block, to install the apache w
 	    EOF
 	}
 
+And here we are again, my apache web server is up and running like before, only this time with Terraform!
 
+![8  web server 2 launched](https://github.com/user-attachments/assets/21242639-7e53-4d28-8124-9e59b85ee879)
+
+Now to apply some automation with Jenkins and git.
 
 
