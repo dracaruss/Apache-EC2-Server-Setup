@@ -64,7 +64,7 @@ TERRAFORM SETUP:
 
 ![proxy-image (1)](https://github.com/user-attachments/assets/8641d8ea-f518-47d2-a793-f1485d18f3e3)
 
-First let's install terraform, via my linux VM on my Windows 10. I am most comfortable with Kali but in this case I am using a vanilla Ubuntu.
+First let's install terraform, via my Linux VM on my Windows 10. I am most comfortable with Kali but in this case I am using a vanilla Ubuntu.
 To install terraform I run these commands to download it, unzip it and then move it into the PATH so I can call it globally.
 
 	sudo apt update && sudo apt install -y wget unzip                                
@@ -78,7 +78,7 @@ To install terraform I run these commands to download it, unzip it and then move
 I got terraform 1.55 purposely, because it's the last version that was then forked to OpenTofu, before IBM took over Hashicorp. 
 I did that to keep it as widely compatible as possible.
 
-Then I had to install the AWS CLi on my VM, to interface with AWS.
+Then I had to install the AWS CLI on my VM, to interface with AWS.
 
 	curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 	unzip awscliv2.zip
@@ -86,15 +86,17 @@ Then I had to install the AWS CLi on my VM, to interface with AWS.
 
 ![2 install the aws cli](https://github.com/user-attachments/assets/8d6b8c7c-8ba1-4d73-a0bf-baaa1086d85b)
 
-Next was to configure the AWS CLi with the credentials and details for the connection.
+Next was to configure the AWS CLI with the credentials and details for the connection.
+Log into the console, go to the user you want to use and get your access key and secret.
+I used an admin user since I want to do such a wide range of things with terraform.
 
 	aws configure 
 
-And also to verify the CLi connection is up and running and good to go.
+And also to verify the CLI connection is up and running and good to go.
 
 	aws sts get-caller-identity 
 
-Now to install VSCode for linux.
+Now to install VSCode for Linux.
 First download the package from the website:
 
 	https://code.visualstudio.com/download
@@ -106,6 +108,94 @@ Then move it to my terraform folder:
 Then install it:
 
 	sudo apt install ./code_1.96.2-1734607745_amd64.deb
+
+![3 Install VSCode for linux](https://github.com/user-attachments/assets/ec97e929-5453-4edc-9b71-817d0cf74fff)
+
+Time to launch VSCode and construct my terraform AWS Infrastructure!
+*Note: remember to install the terraform VSCode plugin! Brackets won’t color without it
+
+I wanted to check what was the latest terraform provider version, to explicitly state it in my required_providers to maintain future stability:
+
+	https://registry.terraform.io/providers/hashicorp/aws/latest
+
+Time to create the main.tf and configure the VPC:
+	
+	terraform {
+	  required_providers {
+	    aws = {
+	      source  = "hashicorp/aws"
+	      version = "5.82.2"
+	    }
+	  }
+	}
+	
+	provider "aws" {
+	  region = "us-east-1"
+	}
+	
+	resource "aws_vpc" "EC2-webserver-vpc" {
+	  cidr_block = "10.0.0.0/24"
+	
+	  tags = {
+	    Name = "main"
+	  }
+	}
+
+Confirm in the console its creation:
+
+![5 apply the vpc via terraform](https://github.com/user-attachments/assets/b801230f-b12e-4977-abde-d12a6f982c68)
+
+Next to create a public subnet:
+	
+	resource "aws_subnet" "public_subnet_russ1" {
+	  vpc_id     = aws_vpc.EC2-webserver-vpc.id
+	  cidr_block = "10.0.0.128/25"
+	
+	  tags = {
+	    Name = "Public and only subnet"
+	  }
+	}
+
+![6 create public subnet](https://github.com/user-attachments/assets/9ea3a1ec-e48b-4d46-952b-1edc9c7f1391)
+
+And then install the Interney Gateway to give the VPC internet access:
+
+	Install my Internet Gateway:
+	resource "aws_internet_gateway" "igw_russ" {
+	  vpc_id = aws_vpc.EC2-webserver-vpc.id
+	}
+
+![6 5 igw configured and vpc attached](https://github.com/user-attachments/assets/4cbfdd31-8600-42cb-8e8b-67796ed6ccfd)
+(Note the VPC is also attached)
+
+Hmmm I had a route table already associated with the VPC when I applied and checked my infrasctructure in the console. (I'm not sure if it was created with the VPC or if I had it there from a previous config). 
+I therefore had to import it into my state and add it to my main.tf.
+
+UI added the config to the main.tf:
+
+	resource "aws_route_table" "vpc_route_table" {
+	  vpc_id = aws_vpc.EC2-webserver-vpc.id
+	
+	  route {
+	    cidr_block = "0.0.0.0/0"
+	    gateway_id = aws_internet_gateway.igw_russ.id
+	  }
+	}
+
+Then imported the VPC via the CLI:
+
+	terraform import aws_route_table.vpc_route_table rtb-01eee8b6a672f0d54
+
+![7 import route table](https://github.com/user-attachments/assets/eeb43b65-f8c4-4584-b3d3-3a2552c0baaa)
+
+Import successful, ok great moving on!
+
+The route table configuration needed to be applied to the route table next:
+##
+	resource "aws_route_table_association" "give_public_internet" {
+	  subnet_id      = aws_subnet.public_subnet_russ1.id
+	  route_table_id = aws_route_table.vpc_route_table.id
+	}
 
 
 
