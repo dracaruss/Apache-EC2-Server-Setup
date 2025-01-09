@@ -36,15 +36,15 @@ https://github.com/dracaruss/Apache-EC2-Server-Setup/blob/7c47e0bb035eba00e286f2
 
 First create a pick-a-name.sh file on the instance:
   
-   $ nano pick-a-name.sh
+	nano pick-a-name.sh
 
 Give it executable ability with:
 
-   $ chmod +x pick-a-name.sh
+	chmod +x pick-a-name.sh
   
 Then paste in the Apache script from my repo, and save and run the script to launch the Apache web server on the instance:
 
-   $ ./pick-a-name.sh
+	./pick-a-name.sh
 
 ![6  Install apache server](https://github.com/user-attachments/assets/8edfb6d8-082c-4293-a582-90212863b27a)
 
@@ -63,11 +63,11 @@ TERRAFORM SETUP:
 First let's install terraform, via my linux VM on my Windows 10. I am most comfortable with Kali but in this case I am using a vanilla Ubuntu.
 To install terraform I run these commands to download it, unzip it and then move it into the PATH so I can call it globally.
 
-$ sudo apt update && sudo apt install -y wget unzip                                
-$ wget https://releases.hashicorp.com/terraform/1.5.5/terraform_1.5.5_linux_amd64.zip
-$ unzip terraform_1.5.5_linux_amd64.zip
-$ sudo mv terraform /usr/local/bin/
-$ terraform -v
+	sudo apt update && sudo apt install -y wget unzip                                
+	wget https://releases.hashicorp.com/terraform/1.5.5/terraform_1.5.5_linux_amd64.zip
+	unzip terraform_1.5.5_linux_amd64.zip
+	sudo mv terraform /usr/local/bin/
+	terraform -v
 
 ![1 get terraform installed](https://github.com/user-attachments/assets/d2a69a03-111c-441d-92d1-7f012a2f5aa8)
 
@@ -76,16 +76,15 @@ I did that to keep it as widely compatible as possible.
 
 Then I had to install the AWS CLi on my VM, to interface with AWS.
 
-$ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
-sudo ./aws/install
+	curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+	unzip awscliv2.zip
+	sudo ./aws/install
 
 ![2 install the aws cli](https://github.com/user-attachments/assets/8d6b8c7c-8ba1-4d73-a0bf-baaa1086d85b)
 
-Next was to configure the AWS CLi with the credentials and details for the connection:
+Next was to configure the AWS CLi with the credentials and details for the connection.
 
-$ aws configure 
-
+	aws configure 
 
 And also to verify the CLi connection is up and running and good to go.
 
