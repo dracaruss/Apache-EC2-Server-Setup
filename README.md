@@ -61,8 +61,8 @@ That's the process I used to configure the web server by using the AWS console, 
 ##
 
 PART 2: TERRAFORM SETUP:
-##
 ![proxy-image (1)](https://github.com/user-attachments/assets/8641d8ea-f518-47d2-a793-f1485d18f3e3)
+##
 
 First let's install terraform, via my Linux VM on my Windows 10. I am most comfortable with Kali but in this case I am using a vanilla Ubuntu.
 To install terraform I run these commands to download it, unzip it and then move it into the PATH so I can call it globally.
