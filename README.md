@@ -9,7 +9,7 @@ Third by using Jenkins to automate the terraform and entire workflow.
 
 ##
 
-CONSOLE SETUP:
+PART 1: AWS CONSOLE SETUP:
 
 ![management logo](https://github.com/user-attachments/assets/a98c57d2-686a-4e41-a2eb-cddb53a8ac3f)
 ##
@@ -60,8 +60,8 @@ That's the process I used to configure the web server by using the AWS console, 
 
 ##
 
-TERRAFORM SETUP:
-
+PART 2: TERRAFORM SETUP:
+##
 ![proxy-image (1)](https://github.com/user-attachments/assets/8641d8ea-f518-47d2-a793-f1485d18f3e3)
 
 First let's install terraform, via my Linux VM on my Windows 10. I am most comfortable with Kali but in this case I am using a vanilla Ubuntu.
@@ -373,6 +373,10 @@ And here we are again, my apache web server is up and running like before, only 
 
 ![8  web server 2 launched](https://github.com/user-attachments/assets/21242639-7e53-4d28-8124-9e59b85ee879)
 
-Now to apply some automation with Jenkins and git.
+Now to apply some automation with Jenkins and git for the last phase.
 
+##
+
+PART 3: JENKINS AUTOMATION WITH GIT:
+##
 
