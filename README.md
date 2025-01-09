@@ -9,7 +9,7 @@ Third by using Jenkins to automate the terraform and entire workflow.
 
 CONSOLE SETUP:
 
-![aws console](https://github.com/user-attachments/assets/7626e32a-691a-42e5-b3f6-d8a9f9e5c7df)
+![proxy-image](https://github.com/user-attachments/assets/093b177a-1eac-4464-9b17-e3e75aba8d04)
 
 First create an EC2 instance in AWS using the console, using a pre made VPC. In this VPC make I made sure to add an Internet Gateway and configure the Route Tables to allow connectivity to the internet for the EC2 in the public subnet. Also configure the NACLS and SGs to allow internet access on HTTP (80) and HTTPS (443).
 
@@ -57,3 +57,5 @@ Working as expected!
 That's the process I used to configure the web server by using the AWS console, so now onto doing it the second way using terraform IAC.
 
 TERRAFORM SETUP:
+
+![proxy-image (1)](https://github.com/user-attachments/assets/8641d8ea-f518-47d2-a793-f1485d18f3e3)
