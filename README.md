@@ -9,7 +9,7 @@ Third by using Jenkins to automate the terraform and entire workflow.
 
 CONSOLE SETUP:
 
-![proxy-image](https://github.com/user-attachments/assets/093b177a-1eac-4464-9b17-e3e75aba8d04)
+![aws logo](https://github.com/user-attachments/assets/f686e294-b06f-47e1-b842-8b8677822181)
 
 First create an EC2 instance in AWS using the console, using a pre made VPC. In this VPC make I made sure to add an Internet Gateway and configure the Route Tables to allow connectivity to the internet for the EC2 in the public subnet. Also configure the NACLS and SGs to allow internet access on HTTP (80) and HTTPS (443).
 
