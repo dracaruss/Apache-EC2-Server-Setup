@@ -61,6 +61,7 @@ That's the process I used to configure the web server by using the AWS console, 
 ##
 
 PART 2: TERRAFORM SETUP:
+
 ![proxy-image (1)](https://github.com/user-attachments/assets/8641d8ea-f518-47d2-a793-f1485d18f3e3)
 ##
 
