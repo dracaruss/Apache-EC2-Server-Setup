@@ -259,7 +259,7 @@ I also need to create a key pair for the EC2:
 
 This gave me an error since it needed the tls provider which I didn’t originally add to my main.tf, Oops.
 
-![11 create the public and private keys](https://github.com/user-attachments/assets/7e240cd2-8f29-4366-be49-bd96cb36f420)
+![11 5 fixed PKI](https://github.com/user-attachments/assets/3396c64f-62c0-4c84-ad44-6defd8233d4e)
 
 First I used 
 
