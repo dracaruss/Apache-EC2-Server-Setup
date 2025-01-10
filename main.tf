@@ -97,7 +97,6 @@ resource "tls_private_key" "privatekey-ec2-webserver" {
 }
 
 resource "aws_key_pair" "ec2-public-key" {
-  key_name   = "ec2-public-key-webserver"
   public_key = tls_private_key.privatekey-ec2-webserver.public_key_openssh
 }
 
@@ -113,7 +112,7 @@ resource "local_file" "private_ec2_key" {
 resource "aws_instance" "ecX-terraform" {
   ami           = "ami-01816d07b1128cd2d"
   instance_type = "t2.micro"
-  key_name      = "ec2-public-key-webserver"
+  key_name      = aws_key_pair.ec2-public-key.key_name
   subnet_id     = aws_subnet.public_subnet_russ1.id
 
   vpc_security_group_ids = [
