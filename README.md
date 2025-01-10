@@ -376,6 +376,162 @@ Now to apply some automation with Jenkins and git for the last phase.
 
 ##
 
-PART 3: JENKINS AUTOMATION WITH GIT:
+PART 3: JENKINS AUTOMATION SETUP WITH GIT:
+
+![0 proxy-image](https://github.com/user-attachments/assets/1850c530-d379-4594-af01-e40eeab4a337)
+
 ##
 
+First I needed to install Jenkins on my Ubuntu VM.
+
+The link to the Jenkins install page:
+https://www.jenkins.io/doc/book/installing/linux/#debianubuntu
+
+Install Ubuntu Jenkins:
+
+	sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
+	  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+	echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" \
+	  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+	  /etc/apt/sources.list.d/jenkins.list > /dev/null
+	sudo apt-get update
+	sudo apt-get install jenkins
+
+To make Jenkins work I also needed to install the supporting Java:
+
+	sudo apt update
+	sudo apt install fontconfig openjdk-17-jre
+	java -version
+	openjdk version "17.0.13" 2024-10-15
+	OpenJDK Runtime Environment (build 17.0.13+11-Debian-2)
+	OpenJDK 64-Bit Server VM (build 17.0.13+11-Debian-2, mixed mode, sharing)
+
+Open the browser once Jenkins has been started and navigate to sign in and start using it:
+
+	http://localhost:8080/
+
+Then install the jenkins plugin for terraform and also set the location of the binary:
+
+![1 install terraform plugin on jenkins](https://github.com/user-attachments/assets/8fcd4272-f594-4b3c-b3cd-e06518ae6347)
+
+![2 configure terraform binary location](https://github.com/user-attachments/assets/d323570a-0d2c-4839-8a05-1ed38500718e)
+
+I assigned my github repo in the Jenkins pipeline configuration next.
+
+This is in case I want to setup things like SCM in the future for automation etc:
+
+![3 assign my github repo in case I want to setup SCM etc](https://github.com/user-attachments/assets/43da0b64-4eaa-4903-ab9a-8b04c0de888a)
+
+Now to add the actual Jenkins script to automate the terraform deployment!
+
+First I set the parameters needed to specify whether this was an apply or destroy:
+
+    parameters {
+        choice(name: 'ACTION', choices: ['Apply', 'Destroy'], description: 'Choose Terraform action')
+    }
+
+Next for the stages, the first of which is a directory clean up so the clone etc works properly:
+
+    stages {
+        stage ("Clean Up"){            
+            steps {                    
+                deleteDir()            
+            }
+        }
+
+Now to clone my github repo for the terraform main.tf:
+
+        stage("Clone Repo"){
+            steps {
+                sh "git clone https://github.com/dracaruss/Apache-EC2-Server-Setup.git"
+            }
+        }
+	
+Since the clean up step removes all files it will also remove the state file, I have to import it from where I safely store it on my VM:
+
+        stage("Restore State File") {
+            steps {
+                script {
+                    // Check if the state file exists in the specified directory
+                    if (fileExists('/home/jenkinsState/ec2webserver/terraform.tfstate')) {
+                        echo "Restoring Terraform state file..."
+                        sh 'cp /home/jenkinsState/ec2webserver/terraform.tfstate Apache-EC2-Server-Setup/terraform.tfstate'
+                    } else {
+                        echo "No Terraform state file found. First run likely."
+                    }
+                }
+            }
+        }
+
+Ok time to run my terraform stages:
+
+        stage("Terraform Init") {
+            steps {
+                dir('Apache-EC2-Server-Setup') {
+                    sh 'terraform init'
+                }
+            }
+        }
+
+        stage("Terraform Plan") {
+            steps {
+                dir('Apache-EC2-Server-Setup') {
+                    sh 'terraform plan'
+                }
+            }
+        }
+
+When it's time to run Apply or Destroy, the code refers to my 'ACTION' choice parameter:
+
+        stage("Terraform Apply/Destroy") {
+            steps {
+                dir('Apache-EC2-Server-Setup') {
+                    script {
+                        if (params.ACTION == 'Apply') {
+                            sh 'terraform apply -auto-approve'
+                        } else if (params.ACTION == 'Destroy') {
+                            sh 'terraform destroy -auto-approve'
+                        }
+                    }
+                }
+            }
+        }
+
+Ok lastly to maintain a persistent state file, I export it to a safe location to be protected from the Clean stage.
+
+        stage("Save State File") {
+            steps {
+                dir('Apache-EC2-Server-Setup') {
+                    script {
+                        // Save the Terraform state file to the specified directory
+                        if (fileExists('terraform.tfstate')) {
+                            echo "Saving Terraform state file..."
+                            sh 'cp terraform.tfstate /home/jenkinsState/ec2webserver/'
+                        }
+                        else {
+                            echo "No Terraform state file to save."
+                        }
+                    }
+                }
+            }
+        }
+
+On the console I can see my resources were properly deployed:
+
+![vpc up 5](https://github.com/user-attachments/assets/fb53ab2c-79c0-404b-9d04-dce737e7d5e6)
+
+Once again I can access my demo Apache web server via the browser again!
+
+![8  web server 2 launched](https://github.com/user-attachments/assets/4989e0c4-50f2-4ed9-8916-7cfd834dabbe)
+
+Since the apply command worked fine I tested the destroy command, and confirmed the EC2 was shutting down:
+
+![6 ec2 shutting down](https://github.com/user-attachments/assets/d4570850-99f6-4e20-8c73-bcc04778329d)
+
+The console also showed my VPC was succesfully removed, so the destroy functions properly:
+
+![7 no vpc after destroy](https://github.com/user-attachments/assets/8258c567-98ba-4e8c-871d-3220db552598)
+
+Ok great! Third step is now complete!
+
+I deployed the AWS EC2 hosted Apache web server in all the 3 different ways I wanted. Good to go! :D
