@@ -297,7 +297,7 @@ Then I explicitly added the tls provider to the main.tf, and specified the versi
 	  }
 	}
 
-This also failed because I didn’t add the ‘local’ provider (face palm), so I explicitly did that with the version for future stability:
+This also failed because I didn’t add the ‘local’ provider (face palm), so I explicitly did that with the 'version' for future stability:
 
 	terraform {
 	  required_providers {
@@ -342,7 +342,7 @@ Now that the backing infrastructure is finally setup, it’s time to provision t
 Ok applied and everything is great! 
 Now finally and lastly it’s time to configure my Apache webserver!
 
-I added the user_data sectino to the EC2 instance block, to install the apache web server via yum on the AWS Linux EC2 
+I added the user_data section to the EC2 instance block, to install the apache web server via yum on the AWS Linux EC2 
 (I made an initial mistake and used apt instead of yum 😀, I guess I am too used to Ubuntu and Kali!)
 ##
 	resource "aws_instance" "ecX-terraform" {
