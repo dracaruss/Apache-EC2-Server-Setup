@@ -113,7 +113,7 @@ Then install it:
 ![3 Install VSCode for linux](https://github.com/user-attachments/assets/ec97e929-5453-4edc-9b71-817d0cf74fff)
 
 Time to launch VSCode and construct my terraform AWS Infrastructure!
-*Note: remember to install the terraform VSCode plugin! Brackets won’t color without it
+*Note: remember to install the terraform VSCode plugin! Brackets won’t color without it.
 
 I wanted to check what was the latest terraform provider version, to explicitly state it in my required_providers to maintain future stability:
 
@@ -167,12 +167,12 @@ And then install the Interney Gateway to give the VPC internet access:
 	}
 
 ![6 5 igw configured and vpc attached](https://github.com/user-attachments/assets/4cbfdd31-8600-42cb-8e8b-67796ed6ccfd)
-(Note the VPC is also attached)
+(Note the VPC is also attached).
 
 Hmmm I had a route table already associated with the VPC when I applied and checked my infrasctructure in the console. (I'm not sure if it was created with the VPC or if I had it there from a previous config). 
 I therefore had to import it into my state and add it to my main.tf.
 
-UI added the config to the main.tf:
+I added the config to the main.tf:
 
 	resource "aws_route_table" "vpc_route_table" {
 	  vpc_id = aws_vpc.EC2-webserver-vpc.id
