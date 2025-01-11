@@ -113,9 +113,9 @@ Then install it:
 ![3 Install VSCode for linux](https://github.com/user-attachments/assets/ec97e929-5453-4edc-9b71-817d0cf74fff)
 
 Time to launch VSCode and construct my terraform AWS Infrastructure!
-*Note: remember to install the terraform VSCode plugin! Brackets won’t color without it.
+*Note: remember to install the VSCode terraform plugin! Brackets won’t color without it.
 
-I wanted to check what was the latest terraform provider version, to explicitly state it in my required_providers to maintain future stability:
+I wanted to check what the latest terraform provider version was, to explicitly declare it in my required_providers to maintain future stability:
 
 	https://registry.terraform.io/providers/hashicorp/aws/latest
 
